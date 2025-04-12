@@ -44,7 +44,9 @@ func main() {
 	var futureValue = investmentAmount * math.Pow(1+expectedReturnRate/100, years)
 	var inflationAdjustedValue = futureValue / math.Pow(1+infaltionRate/100, years)
 
-	fmt.Println("Future Value of Investment: $", futureValue)
-	fmt.Println("Inflation Adjusted Value: $", inflationAdjustedValue)
+	// fmt.Println("Future Value of Investment: $", futureValue)
+	// fmt.Println("Inflation Adjusted Value: $", inflationAdjustedValue)
+	fmt.Printf("Future Value of Investment: $%.2f\n", futureValue)
+	fmt.Printf("Inflation Adjusted Value: $%.2f\n", inflationAdjustedValue)
 
 }
