@@ -1,17 +1,15 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"os"
-	"strconv"
+	"max/bank/fileops"
 )
 
 const accountBalalnceFile = "balance.txt"
 const defaultBalance = 1000.00
 
 func main() {
-	accountBalance, err := getBalanceFromFile()
+	accountBalance, err := fileops.GetFloatFromFile(accountBalalnceFile, defaultBalance)
 	if err != nil {
 		fmt.Println("Error")
 		fmt.Println(err)
@@ -22,12 +20,7 @@ func main() {
 
 	for {
 
-		fmt.Println("\nWhat would you like to do today?")
-		fmt.Println("1. Check balance")
-		fmt.Println("2. Deposit money")
-		fmt.Println("3. Withdraw money")
-		fmt.Println("4. Exit")
-
+		presentOptions()
 		var choice int
 		fmt.Print("Please enter your choice (1-4): ")
 		fmt.Scan(&choice)
@@ -50,7 +43,7 @@ func main() {
 				continue
 			}
 			accountBalance += deposit
-			writeBalanceToFile(accountBalance)
+			fileops.WriteFloatToFile(accountBalalnceFile, accountBalance)
 			fmt.Println("Your new balance is $", accountBalance)
 		case 3:
 			var withdrawl float64
@@ -65,7 +58,7 @@ func main() {
 				continue
 			}
 			accountBalance -= withdrawl
-			writeBalanceToFile(accountBalance)
+			fileops.WriteFloatToFile(accountBalalnceFile, accountBalance)
 			fmt.Println("Your new balance is $", accountBalance)
 
 		default:
@@ -77,28 +70,4 @@ func main() {
 
 	}
 
-}
-
-func writeBalanceToFile(balance float64) {
-	balanceText := fmt.Sprintf("%.2f", balance)
-	os.WriteFile(accountBalalnceFile, []byte(balanceText), 0644)
-}
-
-func getBalanceFromFile() (float64, error) {
-
-	data, err := os.ReadFile(accountBalalnceFile)
-	if err != nil {
-		return defaultBalance, errors.New("could not read balance file. setting to default balance: " + fmt.Sprint(defaultBalance))
-	}
-	balanceText := string(data)
-	balance, err := strconv.ParseFloat(balanceText, 64)
-	if err != nil {
-
-		return defaultBalance, errors.New("could not parse balance from file. setting to default balance " + fmt.Sprint(defaultBalance))
-	}
-	if balance < 0 {
-
-		return defaultBalance, errors.New("invalid balance in file. setting to default balance: " + fmt.Sprint(defaultBalance))
-	}
-	return balance, nil
 }
