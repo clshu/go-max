@@ -11,13 +11,13 @@ func main() {
 	var years float64
 	var expectedReturnRate float64
 
-	fmt.Print("Investment Amount: $")
+	outputText("Investment Amount: $")
 	fmt.Scan(&investmentAmount)
-	fmt.Print("Expected Return Rate (%): ")
+	outputText("Expected Return Rate (%): ")
 	fmt.Scan(&expectedReturnRate)
-	fmt.Print("Investment Duration (years): ")
+	outputText("Investment Duration (years): ")
 	fmt.Scan(&years)
-	fmt.Print("Inflation Rate (%): ")
+	outputText("Inflation Rate (%): ")
 	fmt.Scan(&infaltionRate)
 	if investmentAmount <= 0 {
 		fmt.Println("Investment amount must be greater than 0.")
@@ -44,9 +44,13 @@ func main() {
 	var futureValue = investmentAmount * math.Pow(1+expectedReturnRate/100, years)
 	var inflationAdjustedValue = futureValue / math.Pow(1+infaltionRate/100, years)
 
-	// fmt.Println("Future Value of Investment: $", futureValue)
-	// fmt.Println("Inflation Adjusted Value: $", inflationAdjustedValue)
-	fmt.Printf("Future Value of Investment: $%.2f\n", futureValue)
-	fmt.Printf("Inflation Adjusted Value: $%.2f\n", inflationAdjustedValue)
+	formattedFutureValue := fmt.Sprintf("Future Value of Investment: $%.2f\n", futureValue)
+	formattedInflationAdjustedValue := fmt.Sprintf("Inflation Adjusted Value: $%.2f\n", inflationAdjustedValue)
+	outputText(formattedFutureValue)
+	outputText(formattedInflationAdjustedValue)
 
+}
+
+func outputText(text string) {
+	fmt.Print(text)
 }
