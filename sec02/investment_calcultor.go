@@ -7,9 +7,11 @@ import (
 
 func main() {
 	const infaltionRate = 2.5
-	var investmentAmount float64 = 10000
+	var investmentAmount float64
 	years := 10.0
 	expectedReturnRate := 5.5
+
+	fmt.Scan(&investmentAmount)
 
 	var futureValue = investmentAmount * math.Pow(1+expectedReturnRate/100, years)
 	var inflationAdjustedValue = futureValue / math.Pow(1+infaltionRate/100, years)
