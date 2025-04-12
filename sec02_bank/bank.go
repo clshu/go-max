@@ -25,15 +25,12 @@ func main() {
 			continue
 		}
 
-		checkBalance := choice == 1
-		depositMoney := choice == 2
-		withdrawMoney := choice == 3
-
-		if checkBalance {
+		switch choice {
+		case 1:
 			fmt.Println("Your balance is $", accountBalance)
-		} else if depositMoney {
+		case 2:
 			var deposit float64
-			fmt.Print("Your depost:$ ")
+			fmt.Print("Your deposit: $")
 			fmt.Scan(&deposit)
 			if deposit <= 0 {
 				fmt.Println("Invalid deposit amount. Please enter a positive number.")
@@ -41,26 +38,28 @@ func main() {
 			}
 			accountBalance += deposit
 			fmt.Println("Your new balance is $", accountBalance)
-		} else if withdrawMoney {
-			var withdraw float64
-			fmt.Print("Your withdraw:$ ")
-			fmt.Scan(&withdraw)
-			if withdraw <= 0 {
-				fmt.Println("Invalid withdraw amount. Please enter a positive number.")
+		case 3:
+			var withdrawl float64
+			fmt.Print("Your withdrawl: $")
+			fmt.Scan(&withdrawl)
+			if withdrawl <= 0 {
+				fmt.Println("Invalid withdrawl amount. Please enter a positive number.")
 				continue
 			}
-			if withdraw > accountBalance {
+			if withdrawl > accountBalance {
 				fmt.Println("Insufficient funds. You cannot withdraw more than your account balance.")
 				continue
 			}
-			accountBalance -= withdraw
+			accountBalance -= withdrawl
 			fmt.Println("Your new balance is $", accountBalance)
-		} else {
 
-			break
+		default:
+			fmt.Println("Thank you for using Go Bank. Goodbye!")
+			return
+			// break in Golang here only breaks the switch statement, not the loop
+			// so we need to return to exit the program
 		}
 
 	}
 
-	fmt.Println("Thank you for using Go Bank. Goodbye!")
 }
