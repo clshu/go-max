@@ -1,3 +1,3 @@
-module max/02_go_essenstial
+module max/investment-calculator
 
 go 1.23.5
