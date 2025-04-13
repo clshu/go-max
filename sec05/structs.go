@@ -35,6 +35,8 @@ func main() {
 
 	var appUser2 = user.User{}
 	appUser2.OutputUserDetails()
+
+	user.TestStr("Hello Go")
 }
 
 func getUserData(promptText string) string {

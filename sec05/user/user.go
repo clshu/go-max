@@ -90,3 +90,13 @@ func (u *User) OutputUserDetails2() {
 	fmt.Println("Created At:", u.createdAt.Local())
 	fmt.Println("----------------------------------------")
 }
+
+type str string
+
+func (text str) log() {
+	fmt.Println(text)
+}
+func TestStr(text sting) {
+	var msg str = str(text)
+	msg.log()
+}
