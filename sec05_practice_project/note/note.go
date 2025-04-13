@@ -10,9 +10,9 @@ import (
 
 // Note represents a simple note with a title, content, and creation date.
 type Note struct {
-	Title     string
-	Content   string
-	CreatedAt time.Time
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 // New creates a new Note instance with the given title and content.
