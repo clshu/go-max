@@ -5,6 +5,34 @@ import (
 	"time"
 )
 
+func main() {
+
+	firstName := getUserData("Please enter your first name: ")
+	lastName := getUserData("Please enter your last name: ")
+	birthdate := getUserData("Please enter your birthdate (MM/DD/YYYY): ")
+
+	var appUser *user
+	appUser, err := newUser(firstName, lastName, birthdate)
+	if err != nil {
+		fmt.Println("Error creating user:", err)
+		return
+	}
+	appUser.outputUserDetails()
+	appUser.outputUserDetails2()
+	appUser.clearUserName()
+	appUser.outputUserDetails2()
+
+	var appUser2 user = user{}
+	appUser2.outputUserDetails()
+}
+
+func getUserData(promptText string) string {
+	fmt.Print(promptText)
+	var value string
+	fmt.Scanln(&value)
+	return value
+}
+
 type user struct {
 	firstName string
 	lastName  string
@@ -12,34 +40,25 @@ type user struct {
 	createdAt time.Time
 }
 
-func main() {
-
-	ufirstName := getUserData("Please enter your first name: ")
-	ulastName := getUserData("Please enter your last name: ")
-	ubirthdate := getUserData("Please enter your birthdate (MM/DD/YYYY): ")
-
-	var appUser user
-	appUser = user{
-		ufirstName,
-		ulastName,
-		ubirthdate,
-		time.Now(),
+func newUser(firstName, lastName, birthdate string) (*user, error) {
+	if firstName == "" || lastName == "" || birthdate == "" {
+		return nil, fmt.Errorf("all fields are required")
 	}
-	outputUserDetails(appUser)
-	outputUserDetails2(&appUser)
 
-	var appUser2 user = user{}
-	outputUserDetails(appUser2)
+	return &user{
+		firstName: firstName,
+		lastName:  lastName,
+		birthdate: birthdate,
+		createdAt: time.Now(),
+	}, nil
 }
 
-func getUserData(promptText string) string {
-	fmt.Print(promptText)
-	var value string
-	fmt.Scan(&value)
-	return value
+func (u *user) clearUserName() {
+	u.firstName = ""
+	u.lastName = ""
 }
 
-func outputUserDetails(u user) {
+func (u user) outputUserDetails() {
 	fmt.Println("User Details:")
 	fmt.Println("First Name:", u.firstName)
 	fmt.Println("Last Name:", u.lastName)
@@ -62,7 +81,7 @@ func outputUserDetails(u user) {
 	fmt.Println("----------------------------------------")
 }
 
-func outputUserDetails2(u *user) {
+func (u *user) outputUserDetails2() {
 	fmt.Println("User Details:")
 	fmt.Println("First Name:", u.firstName)
 	fmt.Println("Last Name:", u.lastName)
