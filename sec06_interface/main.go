@@ -87,18 +87,49 @@ func saveToFile(s saver) error {
 }
 
 func printSomething(value interface{}) {
-	switch value.(type) {
-	case string:
-		fmt.Println("String:", value)
-	case int:
-		fmt.Println("Integer:", value)
-	case float64:
-		fmt.Println("Float:", value)
-	case bool:
-		fmt.Println("Boolean:", value)
-	case []string:
-		fmt.Println("Slice of strings:", value)
-	default:
-		fmt.Println("Unknown type:", value)
+	intValue, ok := value.(int)
+	if ok {
+		fmt.Println("Integer:", intValue)
+		return
 	}
+	stringValue, ok := value.(string)
+	if ok {
+		fmt.Println("String:", stringValue)
+		return
+	}
+	floatValue, ok := value.(float64)
+	if ok {
+		fmt.Println("Float:", floatValue)
+		return
+	}
+	boolValue, ok := value.(bool)
+	if ok {
+		fmt.Println("Boolean:", boolValue)
+		return
+	}
+	sliceValue, ok := value.([]string)
+	if ok {
+		fmt.Println("Slice of strings:", sliceValue)
+		return
+	}
+	if value == nil {
+		fmt.Println("Nil value")
+		return
+	}
+	fmt.Println("Unknown type:", value)
+
+	// switch value.(type) {
+	// case string:
+	// 	fmt.Println("String:", value)
+	// case int:
+	// 	fmt.Println("Integer:", value)
+	// case float64:
+	// 	fmt.Println("Float:", value)
+	// case bool:
+	// 	fmt.Println("Boolean:", value)
+	// case []string:
+	// 	fmt.Println("Slice of strings:", value)
+	// default:
+	// 	fmt.Println("Unknown type:", value)
+	// }
 }
