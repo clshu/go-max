@@ -10,6 +10,15 @@ import (
 	"example.com/go-project/todo"
 )
 
+type saver interface {
+	Save() error
+}
+
+type outputable interface {
+	saver
+	Display()
+}
+
 func main() {
 	title, content := getNoteDate()
 	todoText := getUserInput("Todo text: ")
@@ -19,21 +28,12 @@ func main() {
 		fmt.Println("Error:", err)
 		return
 	}
-	userNote.Display()
-	err = userNote.Save()
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
+	outputData(userNote)
+
 	fmt.Println("Note saved successfully!")
 
 	todo, err := todo.New(todoText)
-	todo.Display()
-	err = todo.Save()
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
+	outputData(todo)
 	fmt.Println("Todo saved successfully!")
 
 }
@@ -59,4 +59,21 @@ func getNoteDate() (string, string) {
 	content := getUserInput("Note content: ")
 
 	return title, content
+}
+
+func outputData(o outputable) {
+	o.Display()
+	err := o.Save()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+}
+
+func saveToFile(s saver) error {
+	err := s.Save()
+	if err != nil {
+		return err
+	}
+	return nil
 }
