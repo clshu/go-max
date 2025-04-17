@@ -3,7 +3,8 @@ package main
 import "fmt"
 
 func main() {
-	userNames := make([]string, 2, 5)
+	type strArray []string
+	userNames := make(strArray, 2, 5)
 
 	userNames = append(userNames, "John")
 	userNames = append(userNames, "Jane")
@@ -15,7 +16,9 @@ func main() {
 	userNames[1] = "Jill"
 	fmt.Println(userNames)
 
-	courseRatings := make(map[string]float64, 5)
+	type floatMap map[string]float64
+
+	courseRatings := make(floatMap, 5)
 	courseRatings["Go"] = 4.5
 	courseRatings["Python"] = 4.7
 	courseRatings["Java"] = 4.2
