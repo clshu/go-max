@@ -25,4 +25,7 @@ func main() {
 	fmt.Println("Temperatures: ", temperature)
 	temperature = append(temperature, 5.99)
 	fmt.Println("Temperatures: ", temperature)
+	moreTemperatures := []float64{6.99, 7.99}
+	temperature = append(temperature, moreTemperatures...)
+	fmt.Println("Temperatures: ", temperature)
 }
