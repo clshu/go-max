@@ -6,8 +6,8 @@ type transformFunc func(int) int
 
 func main() {
 	numbers := []int{1, 2, 3, 4}
-	doubled := transformNumbers(&numbers, double)
-	tripled := transformNumbers(&numbers, triple)
+	doubled := transformNumbers(&numbers, getTransformFunction("double"))
+	tripled := transformNumbers(&numbers, getTransformFunction("triple"))
 	fmt.Println(numbers)
 	fmt.Println(doubled)
 	fmt.Println(tripled)
@@ -28,4 +28,15 @@ func double(number int) int {
 
 func triple(n int) int {
 	return n * 3
+}
+
+func getTransformFunction(flag string) transformFunc {
+	switch flag {
+	case "double":
+		return double
+	case "triple":
+		return triple
+	default:
+		panic("Invalid flag")
+	}
 }
