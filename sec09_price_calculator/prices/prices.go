@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"strconv"
+	"example.com/price-calculator/conversion"
 )
 
 const fileName = "prices.txt"
@@ -58,14 +58,10 @@ func (job *taxIncludePriceJob) LoadData() {
 		return
 	}
 
-	var prices = make([]float64, len(lines))
-	for lineIndex, line := range lines {
-		floatPrice, err := strconv.ParseFloat(line, 64)
-		if err != nil {
-			fmt.Println("Error parsing float:", err)
-			return
-		}
-		prices[lineIndex] = floatPrice
+	prices, err := conversion.StringsToFloats(lines)
+	if err != nil {
+		fmt.Println("Error converting strings to floats:", err)
+		return
 	}
 
 	job.InputPrices = prices
