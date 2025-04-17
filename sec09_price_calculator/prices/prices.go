@@ -1,11 +1,10 @@
 package prices
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 
 	"example.com/price-calculator/conversion"
+	"example.com/price-calculator/filemanager"
 )
 
 const fileName = "prices.txt"
@@ -38,23 +37,9 @@ func (job *taxIncludePriceJob) Process() {
 }
 
 func (job *taxIncludePriceJob) LoadData() {
-	file, err := os.Open(fileName)
+	lines, err := filemanager.ReadLines(fileName)
 	if err != nil {
-		fmt.Println("Error opening file:", err)
-		return
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	var lines []string
-
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-
-	if scanner.Err() != nil {
-		fmt.Println("Error reading file:", scanner.Err())
+		fmt.Println("Error reading file:", err)
 		return
 	}
 
