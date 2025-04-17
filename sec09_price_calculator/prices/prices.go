@@ -1,32 +1,30 @@
 package prices
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 
 	"example.com/price-calculator/conversion"
-	"example.com/price-calculator/filemanager"
+	"example.com/price-calculator/iomanager"
 )
 
-const fileName = "prices.txt"
-
+// TaxIncludedPriceJob struct represents a job for calculating tax included prices
 type TaxIncludedPriceJob struct {
-	IOManager         filemanager.FileManager `json:"-"` // skip this field in JSON
-	TaxRate           float64                 `json:"tax_rate"`
-	InputPrices       []float64               `json:"input_prices"`
-	TaxIncludedPrices map[string]string       `json:"tax_included_prices"`
+	IOManager         iomanager.IOMangager `json:"-"` // skip this field in JSON
+	TaxRate           float64              `json:"tax_rate"`
+	InputPrices       []float64            `json:"input_prices"`
+	TaxIncludedPrices map[string]string    `json:"tax_included_prices"`
 }
 
 // NewTaxIncludedPriceJob creates a new taxIncludePricesJob instance
-func NewTaxIncludedPriceJob(fm filemanager.FileManager, taxRate float64) *TaxIncludedPriceJob {
+func NewTaxIncludedPriceJob(iom iomanager.IOMangager, taxRate float64) *TaxIncludedPriceJob {
 	return &TaxIncludedPriceJob{
-		IOManager:   fm,
+		IOManager:   iom,
 		TaxRate:     taxRate,
 		InputPrices: []float64{10, 20, 30},
 	}
 }
 
+// Process calculates the tax included prices and writes the result to a file
 func (job *TaxIncludedPriceJob) Process() {
 	job.LoadData()
 
@@ -38,7 +36,7 @@ func (job *TaxIncludedPriceJob) Process() {
 	}
 
 	job.TaxIncludedPrices = result
-	job.displayJSON()
+	// job.displayJSON()
 
 	err := job.IOManager.WriteResult(job)
 	if err != nil {
@@ -47,6 +45,7 @@ func (job *TaxIncludedPriceJob) Process() {
 	}
 }
 
+// LoadData reads the input prices from a file and converts them to a slice of floats
 func (job *TaxIncludedPriceJob) LoadData() {
 	lines, err := job.IOManager.ReadLines()
 	if err != nil {
@@ -61,12 +60,4 @@ func (job *TaxIncludedPriceJob) LoadData() {
 	}
 
 	job.InputPrices = prices
-}
-
-func (job *TaxIncludedPriceJob) displayJSON() {
-	b, err := json.Marshal(job)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	os.Stdout.Write(b)
 }
