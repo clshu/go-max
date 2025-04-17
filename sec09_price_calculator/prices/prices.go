@@ -25,10 +25,10 @@ func NewTaxIncludedPriceJob(iom iomanager.IOMangager, taxRate float64) *TaxInclu
 }
 
 // Process calculates the tax included prices and writes the result to a file
-func (job *TaxIncludedPriceJob) Process() error {
+func (job *TaxIncludedPriceJob) Process(done chan bool) {
 	err := job.LoadData()
 	if err != nil {
-		return err
+		// return err
 	}
 
 	result := make(map[string]string)
@@ -41,8 +41,9 @@ func (job *TaxIncludedPriceJob) Process() error {
 	job.TaxIncludedPrices = result
 	// job.displayJSON()
 
-	return job.IOManager.WriteResult(job)
+	job.IOManager.WriteResult(job)
 
+	done <- true
 }
 
 // LoadData reads the input prices from a file and converts them to a slice of floats

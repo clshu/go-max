@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 )
 
+// FileManager struct implements the IOMangager interface for file input/output
 type FileManager struct {
 	InputFilePath  string
 	OutputFilePath string
@@ -44,6 +46,8 @@ func (f *FileManager) WriteResult(data any) error {
 	}
 	defer file.Close()
 
+	time.Sleep(3 * time.Second) // Simulate a long task
+
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
 	err = encoder.Encode(data)
@@ -54,8 +58,8 @@ func (f *FileManager) WriteResult(data any) error {
 }
 
 // New creates a new FileManager instance with the given input and output file paths.
-func New(InputFilePath, OutputFilePath string) FileManager {
-	return FileManager{
+func New(InputFilePath, OutputFilePath string) *FileManager {
+	return &FileManager{
 		InputFilePath:  InputFilePath,
 		OutputFilePath: OutputFilePath,
 	}
