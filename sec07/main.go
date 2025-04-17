@@ -10,10 +10,10 @@ func main() {
 	userNames = append(userNames, "Jane")
 
 	fmt.Println(userNames)
-	fmt.Println(len(userNames))
-	fmt.Println(cap(userNames))
+	fmt.Println("length:", len(userNames))
+	fmt.Println("capacity:", cap(userNames))
 	userNames[0] = "Jack"
-	userNames[1] = "Jill"
+
 	fmt.Println(userNames)
 
 	type floatMap map[string]float64
@@ -25,5 +25,15 @@ func main() {
 	courseRatings["C#"] = 4.3
 	courseRatings["JavaScript"] = 4.6
 	fmt.Println(courseRatings)
+
+	fmt.Println("-----------------------------------------")
+
+	for index, value := range userNames {
+		fmt.Println(index, value)
+	}
+	fmt.Println("-----------------------------------------")
+	for key, value := range courseRatings {
+		fmt.Println(key, value)
+	}
 
 }
