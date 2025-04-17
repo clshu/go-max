@@ -14,7 +14,7 @@ func main() {
 	for _, taxRate := range taxRates {
 		outFilePath := fmt.Sprintf("result_%.0f.json", taxRate*100)
 		fm := filemanager.New("prices.txt", outFilePath)
-		priceJob := prices.NewTaxIncludePricesJob(fm, taxRate)
+		priceJob := prices.NewTaxIncludedPriceJob(fm, taxRate)
 		priceJob.Process()
 	}
 

@@ -11,23 +11,23 @@ import (
 
 const fileName = "prices.txt"
 
-type taxIncludePriceJob struct {
-	IOManager        filemanager.FileManager
-	TaxRate          float64
-	InputPrices      []float64
-	TaxIncludePrices map[string]string
+type TaxIncludedPriceJob struct {
+	IOManager         filemanager.FileManager `json:"-"` // skip this field in JSON
+	TaxRate           float64                 `json:"tax_rate"`
+	InputPrices       []float64               `json:"input_prices"`
+	TaxIncludedPrices map[string]string       `json:"tax_included_prices"`
 }
 
-// NewTaxIncludePricesJob creates a new taxIncludePricesJob instance
-func NewTaxIncludePricesJob(fm filemanager.FileManager, taxRate float64) *taxIncludePriceJob {
-	return &taxIncludePriceJob{
+// NewTaxIncludedPriceJob creates a new taxIncludePricesJob instance
+func NewTaxIncludedPriceJob(fm filemanager.FileManager, taxRate float64) *TaxIncludedPriceJob {
+	return &TaxIncludedPriceJob{
 		IOManager:   fm,
 		TaxRate:     taxRate,
 		InputPrices: []float64{10, 20, 30},
 	}
 }
 
-func (job *taxIncludePriceJob) Process() {
+func (job *TaxIncludedPriceJob) Process() {
 	job.LoadData()
 
 	result := make(map[string]string)
@@ -37,7 +37,7 @@ func (job *taxIncludePriceJob) Process() {
 		result[fmt.Sprintf("%.2f", price)] = fmt.Sprintf("%.2f", taxInlcudePrice)
 	}
 
-	job.TaxIncludePrices = result
+	job.TaxIncludedPrices = result
 	job.displayJSON()
 
 	err := job.IOManager.WriteResult(job)
@@ -47,7 +47,7 @@ func (job *taxIncludePriceJob) Process() {
 	}
 }
 
-func (job *taxIncludePriceJob) LoadData() {
+func (job *TaxIncludedPriceJob) LoadData() {
 	lines, err := job.IOManager.ReadLines()
 	if err != nil {
 		fmt.Println("Error reading file:", err)
@@ -63,7 +63,7 @@ func (job *taxIncludePriceJob) LoadData() {
 	job.InputPrices = prices
 }
 
-func (job *taxIncludePriceJob) displayJSON() {
+func (job *TaxIncludedPriceJob) displayJSON() {
 	b, err := json.Marshal(job)
 	if err != nil {
 		fmt.Println("error:", err)
