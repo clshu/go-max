@@ -1,31 +1,26 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	var productNames = [4]string{"A Book"}
-	prices := [4]float64{1.99, 2.99, 3.99, 4.99}
-	temperature := []float64{1.99, 2.99, 3.99, 4.99}
+	userNames := make([]string, 2, 5)
 
-	productNames[2] = "A Carpet"
-	fmt.Println(prices)
-	fmt.Println(productNames)
-	fmt.Println(prices[3])
-	fmt.Println(prices[1:3])
-	fmt.Println(prices[:3])
-	partialPrices := prices[1:]
-	fmt.Println(partialPrices)
-	highlightedPrices := partialPrices[:1]
-	fmt.Println(highlightedPrices)
-	fmt.Printf("partialPrices length: %v capacity: %v\n", len(partialPrices), cap(partialPrices))
-	fmt.Printf("highlightedPrices length: %v capacity: %v\n", len(highlightedPrices), cap(highlightedPrices))
+	userNames = append(userNames, "John")
+	userNames = append(userNames, "Jane")
 
-	fmt.Println("Temperatures: ", temperature)
-	temperature = append(temperature, 5.99)
-	fmt.Println("Temperatures: ", temperature)
-	moreTemperatures := []float64{6.99, 7.99}
-	temperature = append(temperature, moreTemperatures...)
-	fmt.Println("Temperatures: ", temperature)
+	fmt.Println(userNames)
+	fmt.Println(len(userNames))
+	fmt.Println(cap(userNames))
+	userNames[0] = "Jack"
+	userNames[1] = "Jill"
+	fmt.Println(userNames)
+
+	courseRatings := make(map[string]float64, 5)
+	courseRatings["Go"] = 4.5
+	courseRatings["Python"] = 4.7
+	courseRatings["Java"] = 4.2
+	courseRatings["C#"] = 4.3
+	courseRatings["JavaScript"] = 4.6
+	fmt.Println(courseRatings)
+
 }
