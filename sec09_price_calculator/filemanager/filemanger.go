@@ -7,9 +7,14 @@ import (
 	"os"
 )
 
+type FileManager struct {
+	InputFilePath  string
+	OutputFilePath string
+}
+
 // ReadLines reads a file and returns its lines as a slice of strings.
-func ReadLines(filename string) ([]string, error) {
-	file, err := os.Open(filename)
+func (f *FileManager) ReadLines() ([]string, error) {
+	file, err := os.Open(f.InputFilePath)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
 		return nil, err
@@ -31,9 +36,9 @@ func ReadLines(filename string) ([]string, error) {
 	return lines, nil
 }
 
-// WriteJSONToFile writes the given data to a file in JSON format.
-func WriteJSONToFile(filename string, data any) error {
-	file, err := os.Create(filename)
+// WriteResult writes the given data to a file in JSON format.
+func (f *FileManager) WriteResult(data any) error {
+	file, err := os.Create(f.OutputFilePath)
 	if err != nil {
 		return fmt.Errorf("Error creating file: %w", err)
 	}
@@ -46,4 +51,12 @@ func WriteJSONToFile(filename string, data any) error {
 		return fmt.Errorf("Error encoding JSON to file: %w", err)
 	}
 	return nil
+}
+
+// New creates a new FileManager instance with the given input and output file paths.
+func New(InputFilePath, OutputFilePath string) FileManager {
+	return FileManager{
+		InputFilePath:  InputFilePath,
+		OutputFilePath: OutputFilePath,
+	}
 }

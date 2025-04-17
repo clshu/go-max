@@ -12,14 +12,16 @@ import (
 const fileName = "prices.txt"
 
 type taxIncludePriceJob struct {
+	IOManager        filemanager.FileManager
 	TaxRate          float64
 	InputPrices      []float64
 	TaxIncludePrices map[string]string
 }
 
 // NewTaxIncludePricesJob creates a new taxIncludePricesJob instance
-func NewTaxIncludePricesJob(taxRate float64) *taxIncludePriceJob {
+func NewTaxIncludePricesJob(fm filemanager.FileManager, taxRate float64) *taxIncludePriceJob {
 	return &taxIncludePriceJob{
+		IOManager:   fm,
 		TaxRate:     taxRate,
 		InputPrices: []float64{10, 20, 30},
 	}
@@ -38,7 +40,7 @@ func (job *taxIncludePriceJob) Process() {
 	job.TaxIncludePrices = result
 	job.displayJSON()
 
-	err := filemanager.WriteJSONToFile(fmt.Sprintf("result_%.0f.json", job.TaxRate*100), job)
+	err := job.IOManager.WriteResult(job)
 	if err != nil {
 		fmt.Println("Error writing to file:", err)
 		return
@@ -46,7 +48,7 @@ func (job *taxIncludePriceJob) Process() {
 }
 
 func (job *taxIncludePriceJob) LoadData() {
-	lines, err := filemanager.ReadLines(fileName)
+	lines, err := job.IOManager.ReadLines()
 	if err != nil {
 		fmt.Println("Error reading file:", err)
 		return
