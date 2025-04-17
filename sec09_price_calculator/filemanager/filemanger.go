@@ -2,6 +2,7 @@ package filemanager
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 )
@@ -28,4 +29,21 @@ func ReadLines(filename string) ([]string, error) {
 		return nil, scanner.Err()
 	}
 	return lines, nil
+}
+
+// WriteJSONToFile writes the given data to a file in JSON format.
+func WriteJSONToFile(filename string, data any) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return fmt.Errorf("Error creating file: %w", err)
+	}
+	defer file.Close()
+
+	encoder := json.NewEncoder(file)
+	encoder.SetIndent("", "  ")
+	err = encoder.Encode(data)
+	if err != nil {
+		return fmt.Errorf("Error encoding JSON to file: %w", err)
+	}
+	return nil
 }

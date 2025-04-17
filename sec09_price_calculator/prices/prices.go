@@ -1,7 +1,9 @@
 package prices
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 
 	"example.com/price-calculator/conversion"
 	"example.com/price-calculator/filemanager"
@@ -12,7 +14,7 @@ const fileName = "prices.txt"
 type taxIncludePriceJob struct {
 	TaxRate          float64
 	InputPrices      []float64
-	taxIncludePrices map[string]float64
+	TaxIncludePrices map[string]string
 }
 
 // NewTaxIncludePricesJob creates a new taxIncludePricesJob instance
@@ -33,7 +35,14 @@ func (job *taxIncludePriceJob) Process() {
 		result[fmt.Sprintf("%.2f", price)] = fmt.Sprintf("%.2f", taxInlcudePrice)
 	}
 
-	fmt.Println(result)
+	job.TaxIncludePrices = result
+	job.displayJSON()
+
+	err := filemanager.WriteJSONToFile(fmt.Sprintf("result_%.0f.json", job.TaxRate*100), job)
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return
+	}
 }
 
 func (job *taxIncludePriceJob) LoadData() {
@@ -50,4 +59,12 @@ func (job *taxIncludePriceJob) LoadData() {
 	}
 
 	job.InputPrices = prices
+}
+
+func (job *taxIncludePriceJob) displayJSON() {
+	b, err := json.Marshal(job)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	os.Stdout.Write(b)
 }
