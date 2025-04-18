@@ -61,13 +61,14 @@ func (u *User) Save() (int64, error) {
 // ValidateCredentials checks if the provided email and password are valid
 func (u *User) ValidateCredentials() error {
 
-	query := `SELECT password FROM users WHERE email = ?`
+	query := `SELECT id, password FROM users WHERE email = ?`
 	row := db.DB.QueryRow(query, strings.ToLower(u.Email))
 	var hashedPassword string
-	err := row.Scan(&hashedPassword)
+	err := row.Scan(&u.ID, &hashedPassword)
 	if err != nil {
 		return fmt.Errorf("invalid email or password")
 	}
+
 	same, err := util.ComparePasswordAndHash(u.Password, hashedPassword)
 	if err != nil {
 		return fmt.Errorf("invalid email or password")

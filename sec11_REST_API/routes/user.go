@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"example.com/restapi/models"
+	"example.com/restapi/util"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,12 +40,20 @@ func loginUser(c *gin.Context) {
 		return
 	}
 
+	// Validate user credentials, it also populates u.ID
 	if err := user.ValidateCredentials(); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
+	token, err := util.GenerateToken(user.ID, user.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Login successful",
+		"id":    user.ID,
+		"email": user.Email,
+		"token": token,
 	})
 }
