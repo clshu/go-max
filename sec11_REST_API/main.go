@@ -2,13 +2,15 @@ package main
 
 import (
 	"net/http"
-	"time"
 
+	"example.com/restapi/db"
 	"example.com/restapi/models"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	db.InitDB()
+
 	r := gin.Default()
 
 	// r.Use(mw.LogUserAgent)
@@ -21,7 +23,11 @@ func main() {
 }
 
 func getEvents(c *gin.Context) {
-	events := models.GetAllEvents()
+	events, err := models.GetAllEvents()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, events)
 }
@@ -33,10 +39,13 @@ func createEvent(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	event.ID = len(models.GetAllEvents()) + 1 // Simple ID assignment
-	event.CreatedAt = time.Now()
-	event.UpdatedAt = time.Now()
+
 	event.UserID = 1 // Assuming a default user ID for simplicity
-	event.Save()
+
+	if err := event.Save(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusCreated, event)
 }
