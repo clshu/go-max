@@ -78,10 +78,12 @@ func updateEvent(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Event not found"})
 		return
 	}
-	// Bind the JSON body to the event struct
-	// and update the event
-	// Assuming the event struct has a method to update itself
-	// and save the changes to the database
+
+	userID := c.GetInt64("userID")
+	if foundEvent.UserID != userID {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "You are not authorized to update this event"})
+		return
+	}
 
 	var updateEvent models.Event
 	if err := c.ShouldBindJSON(&updateEvent); err != nil {
@@ -89,8 +91,8 @@ func updateEvent(c *gin.Context) {
 		return
 	}
 
-	updateEvent.ID = id
-	updateEvent.UserID = 1 // Assuming a default user ID for simplicity
+	updateEvent.ID = foundEvent.ID
+	updateEvent.UserID = foundEvent.UserID
 	updateEvent.CreatedAt = foundEvent.CreatedAt
 	updateEvent.UpdatedAt = util.GetDBTimeFormat(time.Now())
 
@@ -110,13 +112,19 @@ func deleteEvent(c *gin.Context) {
 		return
 	}
 
-	event, err := models.GetEventByID(id)
+	foundEvent, err := models.GetEventByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Event not found"})
 		return
 	}
 
-	if err := event.Delete(); err != nil {
+	userID := c.GetInt64("userID")
+	if foundEvent.UserID != userID {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "You are not authorized to delete this event"})
+		return
+	}
+
+	if err := foundEvent.Delete(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
