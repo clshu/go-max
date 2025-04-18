@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"example.com/restapi/models"
+	"example.com/restapi/util"
 	"github.com/gin-gonic/gin"
 )
 
@@ -87,9 +88,9 @@ func updateEvent(c *gin.Context) {
 	}
 
 	updateEvent.ID = id
-	updateEvent.UserID = 1
-	updateEvent.CreatedAt = foundEvent.CreatedAt // Assuming a default user ID for simplicity
-	updateEvent.UpdatedAt = time.Now()
+	updateEvent.UserID = 1 // Assuming a default user ID for simplicity
+	updateEvent.CreatedAt = foundEvent.CreatedAt
+	updateEvent.UpdatedAt = util.GetDBTimeFormat(time.Now())
 
 	if err := updateEvent.Update(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
