@@ -124,18 +124,18 @@ func (e *Event) CancelRegistration(userID int64) error {
 }
 
 // CheckRegistration checks if a user is registered for an event
-// and returns true if registered, false otherwise
-func (e *Event) CheckRegistration(userID int64) (bool, error) {
-	query := `SELECT COUNT(*) FROM registrations WHERE event_id = ? AND user_id = ?`
+func (e *Event) CheckRegistration(userID int64) (int64, error) {
+	query := `SELECT id FROM registrations WHERE event_id = ? AND user_id = ?`
 	stmt, err := db.DB.Prepare(query)
 	if err != nil {
-		return false, err
+		return 0, err
 	}
 	defer stmt.Close()
-	var count int
-	err = stmt.QueryRow(e.ID, userID).Scan(&count)
+	var id int64
+
+	err = stmt.QueryRow(e.ID, userID).Scan(&id)
 	if err != nil {
-		return false, err
+		return 0, err
 	}
-	return count > 0, nil
+	return id, nil
 }

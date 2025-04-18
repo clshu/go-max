@@ -46,15 +46,15 @@ func cancelRegistration(c *gin.Context) {
 
 	// Check if the registration exists
 
-	found, err := event.CheckRegistration(userID)
+	id, err := event.CheckRegistration(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not check registration"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not find registration"})
 		return
 	}
-	if !found {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No registration found"})
-		return
-	}
+	// if !found {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "No registration found"})
+	// 	return
+	// }
 
 	err = event.CancelRegistration(userID)
 	if err != nil {
@@ -62,7 +62,7 @@ func cancelRegistration(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Registration cancelled",
+		"cancelled_registration_id": id,
 	})
 
 }
