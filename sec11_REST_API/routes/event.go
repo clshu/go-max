@@ -29,12 +29,19 @@ func createEvent(c *gin.Context) {
 
 	event.UserID = 1 // Assuming a default user ID for simplicity
 
-	if err := event.Save(); err != nil {
+	id, err := event.Save()
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, event)
+	newEvent, err := models.GetEventByID(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, newEvent)
 }
 
 func getEventByID(c *gin.Context) {

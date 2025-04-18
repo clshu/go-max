@@ -19,24 +19,24 @@ type Event struct {
 }
 
 // Save the event to the database
-func (e *Event) Save() error {
+func (e *Event) Save() (int64, error) {
 	query := `INSERT INTO events (name, description, location, date_time, user_id) VALUES (?, ?, ?, ?, ?)`
 	stmt, err := db.DB.Prepare(query)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer stmt.Close()
 	result, err := stmt.Exec(e.Name, e.Description, e.Location, e.DateTime, e.UserID)
 	if err != nil {
-		return err
+		return 0, err
 	}
+
 	id, err := result.LastInsertId()
 	if err != nil {
-		return err
+		return 0, err
 	}
-	e.ID = id
 
-	return err
+	return id, err
 }
 
 // Update the event in the database
