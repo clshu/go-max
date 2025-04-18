@@ -1,6 +1,7 @@
 package models
 
 import (
+	"log"
 	"time"
 
 	"example.com/restapi/db"
@@ -105,4 +106,36 @@ func (e *Event) Register(userID int64) error {
 	defer stmt.Close()
 	_, err = stmt.Exec(e.ID, userID)
 	return err
+}
+
+// CancelRegistration cancels a user's registration for an event
+func (e *Event) CancelRegistration(userID int64) error {
+	query := `DELETE FROM registrations WHERE event_id = ? AND user_id = ?`
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	log.Println("Event ID:", e.ID)
+	log.Println("User ID:", userID)
+	_, err = stmt.Exec(e.ID, userID)
+	log.Println("Error:", err)
+	return err
+}
+
+// CheckRegistration checks if a user is registered for an event
+// and returns true if registered, false otherwise
+func (e *Event) CheckRegistration(userID int64) (bool, error) {
+	query := `SELECT COUNT(*) FROM registrations WHERE event_id = ? AND user_id = ?`
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return false, err
+	}
+	defer stmt.Close()
+	var count int
+	err = stmt.QueryRow(e.ID, userID).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
 }
